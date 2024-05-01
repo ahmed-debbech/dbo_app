@@ -1,12 +1,13 @@
 import 'package:dbo_app/services/BackgroundService.dart';
 import 'package:dbo_app/services/BudoService.dart';
 import 'package:dbo_app/services/PushNotificationService.dart';
-import 'package:dbo_app/tabs/budo.dart';
+import 'package:dbo_app/tabs/events.dart';
 import 'package:dbo_app/tabs/news.dart';
 import 'package:dbo_app/tabs/worldboss.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import './options.dart' as firebase_opts;
 import './global.dart' as globals;
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget with WidgetsBindingObserver {
       theme: ThemeData(
         //colorScheme: ColorScheme.fromSeed(seedColor: Color(0xEEFEB521)), //yellow: Color(0xEEFEB521) blue: Color(0xEE0C3550)
         colorScheme:
-            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 12, 53, 80)),
+            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 255, 255, 255)),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'DBOG Event Notifier'),
@@ -110,31 +111,57 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return Banner(
-        message: 'beta',
-        location: BannerLocation.topEnd,
-        color: Color.fromARGB(201, 255, 5, 5),
-        child: DefaultTabController(
+    return DefaultTabController(
             length: 3,
             child: Scaffold(
+              
                 appBar: AppBar(
-                  backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                  flexibleSpace: Image(
+                    opacity: const AlwaysStoppedAnimation(.4),
+                    image: AssetImage('assets/images/background.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                  backgroundColor: Colors.black,
+                  //backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                   bottom: const TabBar(
                     tabs: [
-                      Tab(icon: Icon(Icons.event_available)),
-                      Tab(icon: Icon(Icons.emoji_events)),
-                      Tab(icon: Icon(Icons.new_releases_rounded)),
+                      Tab(icon: Icon(Icons.event_available, color: Colors.white,)),
+                      Tab(icon: Icon(Icons.emoji_events, color: Colors.white,)),
+                      Tab(icon: Icon(Icons.settings, color: Colors.white,)),
                     ],
                   ),
-                  title: const Text(
+                  title: Row(
+                      children: [ 
+                                    Container(
+                color: Colors.transparent, // To see the difference between the image's original size and the frame
+                height: 24,
+                width: 24,
+
+                // Uploading the Image from Assets
+                child: Image.asset(
+                          "assets/images/icon1.png",
+                          fit: BoxFit.cover,
+                        )),
+                        SizedBox(width: 10),
+                        const Text(
                     'DBOG Event Notifier',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 0, 0, 0)),
+                        color: Color.fromARGB(255, 255, 255, 255)),
                   ),
-                ),
-                body: const TabBarView(
-                  children: [Budokai(), Boss(), NewsTab()],
+                        ]
+                )),
+                body: Container(
+            decoration: BoxDecoration(
+        image: DecorationImage(
+          opacity:  0.2,
+          image: AssetImage('assets/images/back_app.jpg',), // Replace with your image path
+          fit: BoxFit.cover,
+        ),
+      ), child: const TabBarView(
+                  
+                  children: [
+                    AllEvents(), Boss(), NewsTab()],
                 ))));
   }
 }
