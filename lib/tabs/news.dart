@@ -77,9 +77,6 @@ class NewsState extends State<NewsTab> {
                   children: [
                     Row(
                     children: [
-                      Expanded(
-                      flex: 8,
-                      child:
                       const Padding(
                       padding: EdgeInsets.all(10),
                       child: Text(
@@ -88,21 +85,7 @@ class NewsState extends State<NewsTab> {
                             color: Color.fromARGB(255, 46, 46, 46),
                             fontWeight: FontWeight.bold,
                             fontSize: 24),
-                      ))),
-                      Expanded(
-                      flex: 2,
-                      child:
-                       Padding(
-                      padding: EdgeInsets.all(10),
-                        child: 
-                        IconButton(
-                          icon: Icon(Icons.notifications),
-                          onPressed: () {
-                            print("eeee");
-                            globals.openNotificationPanel = true;
-                          },
-                        )
-                      )),
+                      ))
                     ]),
                     list.isEmpty ?
                     Text("News about the app will be here.")

@@ -41,7 +41,7 @@ class NotifTabState extends State<NotifTab> {
             IconButton(
               icon: Icon(Icons.android),
               onPressed: () {
-                globals.openNotificationPanel = false;
+                globals.settingsWindow = 0;
               },
             )
           )),

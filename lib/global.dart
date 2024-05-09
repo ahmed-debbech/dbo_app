@@ -16,7 +16,7 @@ List<String> worldBossTimes = [];
 
 List<News> newsList = [];
 
-bool openNotificationPanel = false;
+int settingsWindow = 0; //0 default 1 news 2 notif
 
 getVersion() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();

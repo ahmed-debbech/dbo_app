@@ -4,6 +4,7 @@ import 'package:dbo_app/services/PushNotificationService.dart';
 import 'package:dbo_app/tabs/events.dart';
 import 'package:dbo_app/tabs/news.dart';
 import 'package:dbo_app/tabs/notif_panel.dart';
+import 'package:dbo_app/tabs/settings.dart';
 import 'package:dbo_app/tabs/worldboss.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -77,26 +78,17 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   BackgroundService backs = BackgroundService();
 
   bool openNotifPanel = false;
-  late Timer _clockTimer;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _clockTimer = Timer.periodic(Duration(seconds: 0), (timer) {
-      setState(() {
-        if(globals.openNotificationPanel)
-        openNotifPanel = true;
-        else
-        openNotifPanel = false;
-      });
-    });
+
   }
 
   @override
   void dispose() {
     super.dispose();
-    _clockTimer.cancel();
   }
 
   @override
@@ -172,14 +164,15 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           image: AssetImage('assets/images/back_app.jpg',), // Replace with your image path
           fit: BoxFit.cover,
         ),
-      ), child:  TabBarView(
+      ), child:  const TabBarView(
                   
                   children: [
                     AllEvents(), Boss(), 
-                    openNotifPanel == false ?
+                    /*openNotifPanel == false ?
                     NewsTab()
                     :
-                    NotifTab()
+                    NotifTab()*/
+                    SettingsTab()
                     ],
                 ))));
   }
