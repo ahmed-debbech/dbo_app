@@ -31,11 +31,7 @@ class _EventWeekState extends State<EventWeek> {
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold))),
                           ListTile(
-                            leading: Image(
-                    opacity: const AlwaysStoppedAnimation(.4),
-                    image: AssetImage('assets/images/background.jpg'),
-                    fit: BoxFit.values,
-                  ) ,
+                            leading: Text("eee"),
                             title: Text(
                               'week event name',
                             ),

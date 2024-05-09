@@ -73,9 +73,14 @@ class NewsState extends State<NewsTab> {
   Widget build(BuildContext context) {
     String ver = globals.versionNum;
     return  Center(
-                    child: Column(
+              child: Column(
                   children: [
-                    const Padding(
+                    Row(
+                    children: [
+                      Expanded(
+                      flex: 8,
+                      child:
+                      const Padding(
                       padding: EdgeInsets.all(10),
                       child: Text(
                         "What's new 🔥",
@@ -83,13 +88,33 @@ class NewsState extends State<NewsTab> {
                             color: Color.fromARGB(255, 46, 46, 46),
                             fontWeight: FontWeight.bold,
                             fontSize: 24),
-                        textAlign: TextAlign.left,
-                    )),
+                      ))),
+                      Expanded(
+                      flex: 2,
+                      child:
+                       Padding(
+                      padding: EdgeInsets.all(10),
+                        child: 
+                        IconButton(
+                          icon: Icon(Icons.notifications),
+                          onPressed: () {
+                            print("eeee");
+                            globals.openNotificationPanel = true;
+                          },
+                        )
+                      )),
+                    ]),
                     list.isEmpty ?
                     Text("News about the app will be here.")
                     :
                     _buildCardWidgets()
-                    , Card(
+                    , 
+                    Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 10.0),
+                      child: Card(
                           color: const Color.fromARGB(237, 199, 199, 199),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -111,7 +136,7 @@ class NewsState extends State<NewsTab> {
                                   )),
                             ],
                           ),
-                        ),
+                        )))),
                     
                   ],
                 ));

@@ -3,11 +3,13 @@ import 'package:dbo_app/services/BudoService.dart';
 import 'package:dbo_app/services/PushNotificationService.dart';
 import 'package:dbo_app/tabs/events.dart';
 import 'package:dbo_app/tabs/news.dart';
+import 'package:dbo_app/tabs/notif_panel.dart';
 import 'package:dbo_app/tabs/worldboss.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'dart:async';
 import 'package:permission_handler/permission_handler.dart';
 import './options.dart' as firebase_opts;
 import './global.dart' as globals;
@@ -74,15 +76,27 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   BudoService bs = BudoService();
   BackgroundService backs = BackgroundService();
 
+  bool openNotifPanel = false;
+  late Timer _clockTimer;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _clockTimer = Timer.periodic(Duration(seconds: 0), (timer) {
+      setState(() {
+        if(globals.openNotificationPanel)
+        openNotifPanel = true;
+        else
+        openNotifPanel = false;
+      });
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
+    _clockTimer.cancel();
   }
 
   @override
@@ -154,14 +168,19 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 body: Container(
             decoration: BoxDecoration(
         image: DecorationImage(
-          opacity:  0.2,
+          opacity:  0.1,
           image: AssetImage('assets/images/back_app.jpg',), // Replace with your image path
           fit: BoxFit.cover,
         ),
-      ), child: const TabBarView(
+      ), child:  TabBarView(
                   
                   children: [
-                    AllEvents(), Boss(), NewsTab()],
+                    AllEvents(), Boss(), 
+                    openNotifPanel == false ?
+                    NewsTab()
+                    :
+                    NotifTab()
+                    ],
                 ))));
   }
 }
