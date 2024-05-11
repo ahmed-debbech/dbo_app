@@ -76,62 +76,41 @@ class NewsState extends State<NewsTab> {
               child: Column(
                   children: [
                     Row(
-                    children: [
-                      const Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        "What's new 🔥",
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 46, 46, 46),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24),
-                      ))
-                    ]),
+        children: [
+          Expanded(
+          flex: 2,
+          child:
+            Padding(
+          padding: EdgeInsets.all(10),
+            child: 
+            IconButton(
+              icon: Icon(Icons.arrow_back_ios_rounded),
+              onPressed: () {
+                globals.settingsWindow = 0;
+              },
+            )
+          )),
+          Expanded(
+          flex: 8,
+          child:
+          const Padding(
+          padding: EdgeInsets.all(10),
+          child: Text(
+             "    What's new 🔥",
+            style: TextStyle(
+                color: Color.fromARGB(255, 46, 46, 46),
+                fontWeight: FontWeight.bold,
+                fontSize: 24),
+            textAlign: TextAlign.left,
+          ))
+          ),
+        ]),
                     list.isEmpty ?
                     Text("News about the app will be here.")
                     :
                     _buildCardWidgets()
-                    , 
-                    Expanded(
-                  child: Align(
-                    alignment: FractionalOffset.bottomCenter,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 10.0),
-                      child: Card(
-                          color: const Color.fromARGB(237, 199, 199, 199),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              ListTile(
-                                leading: const Icon(Icons.verified_user_outlined),
-                                title: Text('You are running version: $ver'),
-                              ),
-                              const ListTile(
-                                leading: Icon(Icons.warning_amber_rounded),
-                                title: Text('This is an Unoffical app of DBOG'),
-                              ),
-                              const ListTile(
-                                  leading: Icon(Icons.code_rounded),
-                                  title: InkWell(
-                                    onTap: _launchURL,
-                                    child:
-                                        Text('Made with ❤️ by Ahmed Debbech'),
-                                  )),
-                            ],
-                          ),
-                        )))),
-                    
                   ],
                 ));
   }
 }
 
-
-_launchURL() async {
-  Uri _url = Uri.parse('https://x.com/AhmedDebb');
-  if (await launchUrl(_url)) {
-    await launchUrl(_url);
-  } else {
-    print('could not launch url');
-  }
-}

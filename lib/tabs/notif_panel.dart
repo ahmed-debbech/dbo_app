@@ -39,7 +39,7 @@ class NotifTabState extends State<NotifTab> {
           padding: EdgeInsets.all(10),
             child: 
             IconButton(
-              icon: Icon(Icons.android),
+              icon: Icon(Icons.arrow_back_ios_rounded),
               onPressed: () {
                 globals.settingsWindow = 0;
               },

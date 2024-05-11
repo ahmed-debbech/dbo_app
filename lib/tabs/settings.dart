@@ -1,14 +1,47 @@
+import 'dart:async';
+
+import 'package:dbo_app/tabs/news.dart';
+import 'package:dbo_app/tabs/notif_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:dbo_app/global.dart' as globals;
 
 class SettingsTab extends StatefulWidget{
   const SettingsTab({super.key});
 
+  
+  @override
+  State<SettingsTab> createState() => SettingsTabState();
+}
+
+class SettingsTabState extends State<SettingsTab>{
+
+  late Timer _clockTimer;
+  
+  int settings = 0;
+
+  @override
+  void dispose(){
+    super.dispose();
+    _clockTimer.cancel();
+  }
+  
+  @override
+  void initState() {
+    super.initState();
+    _clockTimer = Timer.periodic(Duration(seconds: 0), (timer) {
+      setState(() {
+        settings = globals.settingsWindow;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     String ver = globals.versionNum;
 
-    return  Column(
+    return  
+      settings == 0 ?
+       Column(
       children: [
         Center(
           child:
@@ -18,7 +51,7 @@ class SettingsTab extends StatefulWidget{
           )),
           Center(
           child:
-             OutlinedButton(onPressed: () { globals.settingsWindow = 1; }, 
+             OutlinedButton(onPressed: () { globals.settingsWindow = 2; }, 
             child: const Text("🔔 Choose events to be notified about"),
             
           )),
@@ -51,9 +84,12 @@ class SettingsTab extends StatefulWidget{
                           ),
                         )))),
       ],
-    );
+    )
+    :
+    settings == 2 ?
+    NotifTab()
+    :
+    settings == 1 ?
+    NewsTab() : Column();
   }
-  
-  @override
-  State<StatefulWidget> createState() => const SettingsTab();
 }
