@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:dbo_app/services/BossService.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../utils/utilities.dart';
 import '../global.dart' as globals;
 
@@ -15,9 +13,15 @@ class Boss extends StatefulWidget {
 
 class BossState extends State<Boss> {
   BossService bs = BossService();
-  late Timer _clockTimer;
 
-  List<String> list = [];
+  Color yellow = Color.fromARGB(255, 182, 167, 34);
+  Color green = Color.fromARGB(255, 63, 160, 30);
+  Color red = Color.fromARGB(255, 179, 31, 31);
+
+  String eta = "0";
+  String percentage = "0";
+  bool loaded = false;
+
   @override
   void dispose() {
     super.dispose();
@@ -27,58 +31,86 @@ class BossState extends State<Boss> {
   void initState() {
     super.initState();
     setState(() {
-      bs.getList();
+      loaded = false;
     });
-    _clockTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+    bs.getPercentage().then((value) => {
       setState(() {
-        list = globals.worldBossTimes;
-      });
+        print(value);
+        if(value["percentage"] != "-1"){ 
+          percentage = value["percentage"];
+          if(value["eta"] == null){
+            eta = "0";
+          }else{
+            eta = value["eta"];
+          }
+          loaded = true;
+        }else{
+          loaded = false;
+        }
+      }),
     });
-  }
-
-  List<Widget> _buildCardWidgets() {
-    List<Widget> textWidgets = []; // Add an empty Container as a default widget
-    for (int i = 0; i <= globals.worldBossTimes.length - 1; i++) {
-      textWidgets.add(Card(
-        color: Color.fromARGB(237, 241, 241, 241),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.panorama_fisheye_outlined),
-              title: Text(
-                  "${formatDateFromTimestamp(int.parse(globals.worldBossTimes[i]))}"),
-            )
-          ],
-        ),
-      ));
-    }
-
-    return textWidgets;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
+    return  Column(children: [
       const Padding(
           padding: EdgeInsets.all(10),
           child: Text(
-            "Past World Boss events",
+            "World Boss Progress",
             style: TextStyle(
                 color: Color.fromARGB(255, 46, 46, 46),
                 fontWeight: FontWeight.bold,
                 fontSize: 24),
             textAlign: TextAlign.left,
           )),
-      list.isEmpty
-          ? const Column(children: [
-              Text("World Boss events will be shown here as they come")
+          (loaded == false)?
+              Center( heightFactor: 12, child: CircularProgressIndicator(), )
+          :
+          Column(
+            children:[
+          (double.parse(percentage)<= 50.0) ?
+          Center(
+            child: Text(
+              "${percentage}%",
+              style: TextStyle(
+                fontSize: 40,
+                color: green
+              ),
+              ),
+          )
+          :
+          ((double.parse(percentage) > 50.0) && (double.parse(percentage) < 80.0))?
+                    Center(
+            child: Text(
+              "${percentage}%",
+              style: TextStyle(
+                fontSize: 40,
+                color: yellow
+              ),
+              ),
+          )
+          :
+                    Center(
+            child: Text(
+              "${percentage}%",
+              style: TextStyle(
+                fontSize: 40,
+                color: red
+              ),
+              ),
+          )
+          ,
+          (eta == "0")?
+            Column(children: [
+              Text("ETA is coming soon ~")
             ])
-          : Expanded(
-              child: Material(child: ListView(children: _buildCardWidgets())))
+            :
+            Column(children: [
+              Text("Average ETA ${eta}~"),
+              Text("Keep in mind, this may be inaccurate")
+                ])
+             ])
     ]);
   }
 }

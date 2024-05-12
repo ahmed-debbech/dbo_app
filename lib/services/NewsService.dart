@@ -8,7 +8,7 @@ class NewsService{
   void getAll() async {
     globals.newsList = [];
     try {
-      final response = await http.get(Uri.parse(globals.api + '/s/news'));
+      final response = await http.get(Uri.parse(globals.api + '/app/news'));
       List<dynamic> data = jsonDecode(response.body.toString());
       if (response.statusCode == 200) {
         data.sort((a, b) =>
