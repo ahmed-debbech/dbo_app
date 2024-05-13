@@ -1,18 +1,54 @@
+import 'dart:async';
+
+import 'package:dbo_app/dto/AppState.dart';
 import 'package:flutter/material.dart';
+import '../global.dart' as globals;
 
 class EventWeek extends StatefulWidget {
+
   const EventWeek();
+
   @override
   State<StatefulWidget> createState() => _EventWeekState();
 }
 
 class _EventWeekState extends State<EventWeek> {
+
+  late Timer _clockTimer;
+  List<int> available = [];
+  String? eventWeek = "";
+
+  @override
+  void dispose() {
+    super.dispose();
+    _clockTimer.cancel();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _clockTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if(globals.appState == null){
+          eventWeek = null;
+          available = [];
+        }else{
+          eventWeek = globals.appState?.event_of_the_week;
+          available = globals.appState!.current_events;
+        }
+      });
+      print(eventWeek);
+      print(available);
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
               onDoubleTap: () {},
               child: Card(
-                      color: Color(0xEEFEB521),
+                      color: Color.fromARGB(237, 254, 121, 33),//Color(0xEEFEB521),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
                       ),

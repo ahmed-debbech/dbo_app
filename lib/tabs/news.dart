@@ -25,6 +25,7 @@ class NewsState extends State<NewsTab> {
   @override
   void dispose() {
     super.dispose();
+    _clockTimer.cancel();
   }
 
   @override

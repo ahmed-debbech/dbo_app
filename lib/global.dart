@@ -1,5 +1,6 @@
 library dbo.globals;
 
+import 'package:dbo_app/dto/AppState.dart';
 import 'package:dbo_app/dto/FirebaseEvent.dart';
 import 'package:dbo_app/dto/News.dart';
 import 'package:dbo_app/dto/NotifConfig.dart';
@@ -16,6 +17,8 @@ List<FirebaseEvent> firebaseBudoEvents = [];
 List<String> worldBossTimes = [];
 
 List<News> newsList = [];
+
+AppState? appState;
 
 int settingsWindow = 0; //0 default 1 news 2 notif
 

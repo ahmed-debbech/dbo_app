@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
+    bs.getState();
   }
 
   @override
@@ -102,8 +102,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         break;
       case AppLifecycleState.resumed:
         print("Resumed");
-        bs.getNext();
-        bs.getList();
+        bs.getState();
         backs.refreshUser();
         break;
       case AppLifecycleState.detached:
@@ -167,11 +166,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       ), child:  const TabBarView(
                   
                   children: [
-                    AllEvents(), Boss(), 
-                    /*openNotifPanel == false ?
-                    NewsTab()
-                    :
-                    NotifTab()*/
+                    AllEvents(), 
+                    Boss(), 
                     SettingsTab()
                     ],
                 ))));

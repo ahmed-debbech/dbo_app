@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:dbo_app/dto/AppState.dart';
 import 'package:dbo_app/services/BudoService.dart';
 import 'package:dbo_app/tabs/events_one.dart';
 import 'package:dbo_app/tabs/events_week.dart';
@@ -10,13 +11,16 @@ import '../utils/utilities.dart';
 import '../global.dart' as globals;
 
 class AllEvents extends StatelessWidget {
+
+
   const AllEvents();
+
   @override
   Widget build(BuildContext context) {
     return Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: const <Widget>[
+            children: <Widget>[
               EventWeek(),
               EventsOne(),
               EventsOne(),

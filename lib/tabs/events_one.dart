@@ -39,8 +39,7 @@ class _EventsOneState extends State<EventsOne> {
     setState(() {
       notifIsFired = false;
       isPassed = true;
-      bs.getNext();
-      bs.getList();
+
     });
 
     _clockTimer = Timer.periodic(Duration(seconds: 1), (timer) {
