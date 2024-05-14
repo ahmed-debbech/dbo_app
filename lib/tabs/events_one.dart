@@ -8,10 +8,10 @@ import '../global.dart' as globals;
 
 class EventsOne extends StatefulWidget {
   String title = "";
-  EventsOne({super.key, required String title});
+  EventsOne({super.key, required this.title});
 
   @override
-  State<StatefulWidget> createState() => _EventsOneState(title: this.title);
+  State<StatefulWidget> createState() => _EventsOneState();
 }
 
 class _EventsOneState extends State<EventsOne> {
@@ -23,13 +23,13 @@ class _EventsOneState extends State<EventsOne> {
   bool notifIsFired = false;
   int time = 0;
   bool isPassed = false;
-
+  String iconName = "";
   String eventName = "";
   int timestamp = 0;
 
   BudoService bs = BudoService();
 
-  _EventsOneState({required String title});
+  _EventsOneState();
 
   Future<void> _handleRefresh() async {
     setState(() {});
@@ -56,8 +56,34 @@ class _EventsOneState extends State<EventsOne> {
         } else {
           switch (widget.title) {
             case "adult_solo_budokai":
-              eventName = "adult_solo_budokai";
+              iconName = "budo.png";
+              eventName = "Adult Solo - Budokai";
+              timestamp = int.parse(globals.appState!.adult_solo_budokai);
+              break;
+            case "adult_party_budokai":
+              iconName = "budo.png";
+              eventName = "Adult Party - Budokai";
               timestamp = int.parse(globals.appState!.adult_party_budokai);
+              break;
+            case "kid_solo_budokai":
+              iconName = "budo.png";
+              eventName = "Kid Solo - Budokai";
+              timestamp = int.parse(globals.appState!.kid_solo_budokai);
+              break;
+            case "kid_party_budokai":
+              iconName = "budo.png";
+              eventName = "Kid Party - Budokai";
+              timestamp = int.parse(globals.appState!.kid_party_budokai);
+              break;
+            case "dojo_war":
+              iconName = "dojo.png";
+              eventName = "Dojo War";
+              timestamp = int.parse(globals.appState!.dojo_war);
+              break;
+            case "db_scramble":
+              iconName = "scrum.png";
+              eventName = "DB Scrumble";
+              timestamp = int.parse(globals.appState!.db_scramble);
               break;
             default:
               eventName = "xxx";
@@ -87,7 +113,7 @@ class _EventsOneState extends State<EventsOne> {
         onDoubleTap: () => _handleRefresh(),
         child: isPassed == true
             ? Card(
-                color: Color.fromARGB(255, 120, 120, 120),
+                color: Color.fromARGB(255, 210, 210, 210),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
@@ -118,9 +144,8 @@ class _EventsOneState extends State<EventsOne> {
                     ),
                   ],
                 ))
-            : notifIsFired == false
-                ? Card(
-                    color: Color.fromARGB(237, 241, 241, 241),
+            : Card(
+                    color: Color.fromARGB(235, 234, 179, 28), //Color.fromARGB(237, 241, 241, 241),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
@@ -139,12 +164,17 @@ class _EventsOneState extends State<EventsOne> {
                                   width: 24,
 
                                   // Uploading the Image from Assets
-                                  child: Image.asset(
-                                    "assets/images/budo.png",
-                                    fit: BoxFit.cover,
-                                  )),
+                                  child: (iconName == "")
+                                      ? Image.asset(
+                                          "assets/images/budo.png",
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Image.asset(
+                                          "assets/images/${iconName}",
+                                          fit: BoxFit.cover,
+                                        )),
                               SizedBox(width: 10),
-                              Text("Adult Solo - Budokai",
+                              Text("${eventName}",
                                   style: TextStyle(
                                       //backgroundColor: Colors.black26,
                                       letterSpacing: 1.0,
@@ -152,7 +182,22 @@ class _EventsOneState extends State<EventsOne> {
                                       fontWeight: FontWeight.bold))
                             ])),
                         ListTile(
-                          leading: Icon(Icons.panorama_fisheye_outlined),
+                          leading: ShaderMask(
+                              blendMode: BlendMode.srcATop,
+                              shaderCallback: (Rect bounds) {
+                                return RadialGradient(
+                                  center: Alignment.center,
+                                  radius: 1.0,
+                                  colors: [Colors.red, Colors.transparent],
+                                  stops: [0.0, 1.0],
+                                ).createShader(bounds);
+                              },
+                              child: Container(
+                                  width: 24,
+                                  height: 24,
+                                  child: Icon(
+                                      color: Colors.red,
+                                      Icons.fiber_manual_record_sharp))),
                           title: Text('Next event will be'),
                           subtitle: Text('$nextEvent'),
                         ),
@@ -171,33 +216,6 @@ class _EventsOneState extends State<EventsOne> {
                       ],
                     ),
                   )
-                : Card(
-                    color: Color.fromARGB(237, 199, 199, 199),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ListTile(
-                          leading: Icon(Icons.fiber_manual_record_sharp),
-                          title: Text(
-                              'A new Adult Solo Budokai is starting in ${time} minutes.'),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          // ignore: prefer_const_literals_to_create_immutables
-                          children: <Widget>[
-                            Text(
-                              "Good luck!",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 93, 93, 93)),
-                            ),
-                            SizedBox(width: 8),
-                          ],
-                        ),
-                      ],
-                    )));
+               );
   }
 }

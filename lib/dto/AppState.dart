@@ -27,12 +27,12 @@ class AppState{
         event_of_the_week: json['event_of_the_week'],
         //current_events: formatDateFromISO8601(json['time'])
         current_events: json["current_events"].cast<int>(),
-        adult_solo_budokai: formatDateFromISO8601(json["adult_solo_budokai"]),
-        adult_party_budokai: formatDateFromISO8601(json["adult_party_budokai"]),
-        kid_solo_budokai: formatDateFromISO8601(json["kid_solo_budokai"]),
-        kid_party_budokai: formatDateFromISO8601(json["kid_party_budokai"]),
-        dojo_war: formatDateFromISO8601(json["dojo_war"]),
-        db_scramble: formatDateFromISO8601(json["db_scramble"]),
+        adult_solo_budokai: (json["adult_solo_budokai"]),
+        adult_party_budokai: (json["adult_party_budokai"]),
+        kid_solo_budokai: (json["kid_solo_budokai"]),
+        kid_party_budokai: (json["kid_party_budokai"]),
+        dojo_war: (json["dojo_war"]),
+        db_scramble: (json["db_scramble"]),
     );
   }
 }

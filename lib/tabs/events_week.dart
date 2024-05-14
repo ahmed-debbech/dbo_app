@@ -47,9 +47,22 @@ class _EventWeekState extends State<EventWeek> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(25),
             ),
-            child: const Column(
+            child:  Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                Padding(
+                    padding:
+                        EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
+                    child: Text("Special Event",
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            //backgroundColor: Colors.black26,
+                            letterSpacing: 1.0,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold))),
+                  Text(
+                    '${eventWeek}',
+                  ),
                 Padding(
                     padding:
                         EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
@@ -60,12 +73,9 @@ class _EventWeekState extends State<EventWeek> {
                             letterSpacing: 1.0,
                             fontSize: 18,
                             fontWeight: FontWeight.bold))),
-                ListTile(
-                  leading: Text("eee"),
-                  title: Text(
-                    'week event name',
+                Text(
+                    '${eventWeek}',
                   ),
-                ),
               ],
             )));
   }
