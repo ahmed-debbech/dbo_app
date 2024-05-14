@@ -7,9 +7,11 @@ import '../utils/utilities.dart';
 import '../global.dart' as globals;
 
 class EventsOne extends StatefulWidget {
-  const EventsOne();
+  String title = "";
+  EventsOne({super.key, required String title});
+
   @override
-  State<StatefulWidget> createState() => _EventsOneState();
+  State<StatefulWidget> createState() => _EventsOneState(title: this.title);
 }
 
 class _EventsOneState extends State<EventsOne> {
@@ -22,7 +24,12 @@ class _EventsOneState extends State<EventsOne> {
   int time = 0;
   bool isPassed = false;
 
+  String eventName = "";
+  int timestamp = 0;
+
   BudoService bs = BudoService();
+
+  _EventsOneState({required String title});
 
   Future<void> _handleRefresh() async {
     setState(() {});
@@ -39,22 +46,36 @@ class _EventsOneState extends State<EventsOne> {
     setState(() {
       notifIsFired = false;
       isPassed = true;
-
     });
 
     _clockTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-        nextEvent = formatDateFromTimestamp(globals.serverNextEvent);
-        nextNotif = formatDateFromTimestamp(globals.serverNextNotif);
-        timeLeft = calculateTimeLeftForEvent(globals.serverNextEvent);
-        if (isEventPassed(globals.serverNextEvent)) {
+        if (globals.appState == null) {
+          eventName = "null";
+          timestamp = 0;
+        } else {
+          switch (widget.title) {
+            case "adult_solo_budokai":
+              eventName = "adult_solo_budokai";
+              timestamp = int.parse(globals.appState!.adult_party_budokai);
+              break;
+            default:
+              eventName = "xxx";
+              timestamp = 1715863141000;
+              break;
+          }
+        }
+        nextEvent = formatDateFromTimestamp(timestamp);
+        nextNotif = formatDateFromTimestamp(timestamp);
+        timeLeft = calculateTimeLeftForEvent(timestamp);
+        if (isEventPassed(timestamp)) {
           isPassed = true;
           return;
         }
         isPassed = false;
-        if (shouldFireNotification(globals.serverNextNotif)) {
+        if (shouldFireNotification(timestamp)) {
           notifIsFired = true;
-          time = calculateRestTimeToEventAfterNotif(globals.serverNextEvent);
+          time = calculateRestTimeToEventAfterNotif(timestamp);
         }
       });
     });
@@ -122,7 +143,7 @@ class _EventsOneState extends State<EventsOne> {
                                     "assets/images/budo.png",
                                     fit: BoxFit.cover,
                                   )),
-                                  SizedBox(width: 10),
+                              SizedBox(width: 10),
                               Text("Adult Solo - Budokai",
                                   style: TextStyle(
                                       //backgroundColor: Colors.black26,
