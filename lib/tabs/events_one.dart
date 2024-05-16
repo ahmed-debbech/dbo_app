@@ -24,16 +24,13 @@ class _EventsOneState extends State<EventsOne> {
   int time = 0;
   bool isPassed = false;
   String iconName = "";
-  String eventName = "";
+  String? eventName = null;
   int timestamp = 0;
+  int last = 0;
 
   BudoService bs = BudoService();
 
   _EventsOneState();
-
-  Future<void> _handleRefresh() async {
-    setState(() {});
-  }
 
   @override
   void dispose() {
@@ -51,43 +48,56 @@ class _EventsOneState extends State<EventsOne> {
     _clockTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         if (globals.appState == null) {
-          eventName = "null";
+          eventName = null;
           timestamp = 0;
+          last = 0;
         } else {
           switch (widget.title) {
             case "adult_solo_budokai":
               iconName = "budo.png";
               eventName = "Adult Solo - Budokai";
               timestamp = int.parse(globals.appState!.adult_solo_budokai);
+              last = int.parse(globals.appState?.past_adult_solo_budokai == null? "0" : 
+              globals.appState?.past_adult_solo_budokai??"");
               break;
             case "adult_party_budokai":
               iconName = "budo.png";
               eventName = "Adult Party - Budokai";
               timestamp = int.parse(globals.appState!.adult_party_budokai);
+              last = int.parse(globals.appState?.past_adult_party_budokai == null? "0" : 
+              globals.appState?.past_adult_party_budokai??"");
               break;
             case "kid_solo_budokai":
               iconName = "budo.png";
               eventName = "Kid Solo - Budokai";
               timestamp = int.parse(globals.appState!.kid_solo_budokai);
+              last = int.parse(globals.appState?.past_kid_solo_budokai == null? "0" : 
+              globals.appState?.past_kid_solo_budokai??"");
               break;
             case "kid_party_budokai":
               iconName = "budo.png";
               eventName = "Kid Party - Budokai";
               timestamp = int.parse(globals.appState!.kid_party_budokai);
+              last = int.parse(globals.appState?.past_kid_party_budokai == null? "0" : 
+              globals.appState?.past_kid_party_budokai??"");
               break;
             case "dojo_war":
               iconName = "dojo.png";
               eventName = "Dojo War";
               timestamp = int.parse(globals.appState!.dojo_war);
+              last = int.parse(globals.appState?.past_dojo_war == null? "0" : 
+              globals.appState?.past_dojo_war??"");
               break;
             case "db_scramble":
               iconName = "scrum.png";
               eventName = "DB Scrumble";
               timestamp = int.parse(globals.appState!.db_scramble);
-              break;
+              last = int.parse(globals.appState?.past_db_scramble == null? "0" : 
+              globals.appState?.past_db_scramble??"");
+            break;
             default:
-              eventName = "xxx";
-              timestamp = 1715863141000;
+              eventName = "not set";
+              timestamp = 0;
               break;
           }
         }
@@ -110,7 +120,7 @@ class _EventsOneState extends State<EventsOne> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onDoubleTap: () => _handleRefresh(),
+        onDoubleTap: () => {},
         child: isPassed == true
             ? Card(
                 color: Color.fromARGB(255, 210, 210, 210),
