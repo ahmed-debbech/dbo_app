@@ -13,8 +13,8 @@ class EventWeek extends StatefulWidget {
 
 class _EventWeekState extends State<EventWeek> {
   late Timer _clockTimer;
-  List<int> available = [];
-  String? eventWeek = "";
+  String? eventWeek = null;
+  String? specialEvent = null;
 
   @override
   void dispose() {
@@ -29,10 +29,10 @@ class _EventWeekState extends State<EventWeek> {
       setState(() {
         if (globals.appState == null) {
           eventWeek = null;
-          available = [];
+          specialEvent = null;
         } else {
           eventWeek = globals.appState?.event_of_the_week;
-          available = globals.appState!.current_events;
+          specialEvent = globals.appState?.special_event;
         }
       });
     });
@@ -47,10 +47,11 @@ class _EventWeekState extends State<EventWeek> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(25),
             ),
-            child:  Column(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Padding(
+                if (specialEvent != null)
+                const Padding(
                     padding:
                         EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
                     child: Text("Special Event",
@@ -60,10 +61,14 @@ class _EventWeekState extends State<EventWeek> {
                             letterSpacing: 1.0,
                             fontSize: 18,
                             fontWeight: FontWeight.bold))),
-                  Text(
-                    '${eventWeek}',
-                  ),
-                Padding(
+                if (specialEvent != null)
+                Text(
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  '${specialEvent}',
+                ),
+
+                if(eventWeek != null)
+                const Padding(
                     padding:
                         EdgeInsets.only(top: 10.0, left: 10.0, right: 10.0),
                     child: Text("Event of the week",
@@ -73,9 +78,11 @@ class _EventWeekState extends State<EventWeek> {
                             letterSpacing: 1.0,
                             fontSize: 18,
                             fontWeight: FontWeight.bold))),
+                if(eventWeek != null)
                 Text(
-                    '${eventWeek}',
-                  ),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  '${eventWeek}',
+                ),
               ],
             )));
   }
