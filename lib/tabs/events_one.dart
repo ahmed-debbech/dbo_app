@@ -22,7 +22,7 @@ class _EventsOneState extends State<EventsOne> {
   String nextNotif = "";
   bool notifIsFired = false;
   int time = 0;
-  bool isPassed = false;
+  bool isLive = false;
   String iconName = "";
   String? eventName = null;
   int timestamp = 0;
@@ -41,8 +41,7 @@ class _EventsOneState extends State<EventsOne> {
   @override
   void initState() {
     setState(() {
-      notifIsFired = false;
-      isPassed = true;
+      isLive = false;
     });
 
     _clockTimer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -57,61 +56,68 @@ class _EventsOneState extends State<EventsOne> {
               iconName = "budo.png";
               eventName = "Adult Solo - Budokai";
               timestamp = int.parse(globals.appState!.adult_solo_budokai);
-              last = int.parse(globals.appState?.past_adult_solo_budokai == null? "0" : 
-              globals.appState?.past_adult_solo_budokai??"");
+              last = int.parse(globals.appState?.past_adult_solo_budokai == null
+                  ? "0"
+                  : globals.appState?.past_adult_solo_budokai ?? "");
               break;
             case "adult_party_budokai":
               iconName = "budo.png";
               eventName = "Adult Party - Budokai";
               timestamp = int.parse(globals.appState!.adult_party_budokai);
-              last = int.parse(globals.appState?.past_adult_party_budokai == null? "0" : 
-              globals.appState?.past_adult_party_budokai??"");
+              last = int.parse(
+                  globals.appState?.past_adult_party_budokai == null
+                      ? "0"
+                      : globals.appState?.past_adult_party_budokai ?? "");
               break;
             case "kid_solo_budokai":
               iconName = "budo.png";
               eventName = "Kid Solo - Budokai";
               timestamp = int.parse(globals.appState!.kid_solo_budokai);
-              last = int.parse(globals.appState?.past_kid_solo_budokai == null? "0" : 
-              globals.appState?.past_kid_solo_budokai??"");
+              last = int.parse(globals.appState?.past_kid_solo_budokai == null
+                  ? "0"
+                  : globals.appState?.past_kid_solo_budokai ?? "");
               break;
             case "kid_party_budokai":
               iconName = "budo.png";
               eventName = "Kid Party - Budokai";
               timestamp = int.parse(globals.appState!.kid_party_budokai);
-              last = int.parse(globals.appState?.past_kid_party_budokai == null? "0" : 
-              globals.appState?.past_kid_party_budokai??"");
+              last = int.parse(globals.appState?.past_kid_party_budokai == null
+                  ? "0"
+                  : globals.appState?.past_kid_party_budokai ?? "");
+
               break;
             case "dojo_war":
               iconName = "dojo.png";
               eventName = "Dojo War";
               timestamp = int.parse(globals.appState!.dojo_war);
-              last = int.parse(globals.appState?.past_dojo_war == null? "0" : 
-              globals.appState?.past_dojo_war??"");
+              last = int.parse(globals.appState?.past_dojo_war == null
+                  ? "0"
+                  : globals.appState?.past_dojo_war ?? "");
               break;
             case "db_scramble":
               iconName = "scrum.png";
               eventName = "DB Scrumble";
               timestamp = int.parse(globals.appState!.db_scramble);
-              last = int.parse(globals.appState?.past_db_scramble == null? "0" : 
-              globals.appState?.past_db_scramble??"");
-            break;
+              last = int.parse(globals.appState?.past_db_scramble == null
+                  ? "0"
+                  : globals.appState?.past_db_scramble ?? "");
+              break;
             default:
               eventName = "not set";
               timestamp = 0;
+              last = 0;
+              isLive = false;
               break;
           }
         }
         nextEvent = formatDateFromTimestamp(timestamp);
-        nextNotif = formatDateFromTimestamp(timestamp);
         timeLeft = calculateTimeLeftForEvent(timestamp);
-        if (isEventPassed(timestamp)) {
-          isPassed = true;
-          return;
-        }
-        isPassed = false;
-        if (shouldFireNotification(timestamp)) {
-          notifIsFired = true;
-          time = calculateRestTimeToEventAfterNotif(timestamp);
+        //check for 30 min from last
+        bool passed = isEventPassed(timestamp);
+        if (passed) {
+          isLive = true;
+        } else {
+          isLive = isEventLive(30, last);
         }
       });
     });
@@ -119,43 +125,16 @@ class _EventsOneState extends State<EventsOne> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onDoubleTap: () => {},
-        child: isPassed == true
-            ? Card(
-                color: Color.fromARGB(255, 210, 210, 210),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const <Widget>[
-                    ListTile(
-                      leading: Icon(Icons.replay_rounded),
-                      title: Text(
-                        'We are working on getting the next event.',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: <Widget>[
-                        Text(
-                          "Please come back in few minutes!",
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 212, 212, 212)),
-                        ),
-                        SizedBox(width: 8),
-                      ],
-                    ),
-                  ],
-                ))
-            : Card(
-                    color: Color.fromARGB(235, 234, 179, 28), //Color.fromARGB(237, 241, 241, 241),
+    return (globals.appState == null)
+        ? Center(
+            heightFactor: 12,
+            child: CircularProgressIndicator(),
+          )
+        : GestureDetector(
+            onDoubleTap: () => {},
+            child: isLive == false
+                ? Card(
+                    color: Color.fromARGB(237, 241, 241, 241),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
@@ -164,7 +143,7 @@ class _EventsOneState extends State<EventsOne> {
                       children: <Widget>[
                         // ignore: prefer_const_constructors
                         Padding(
-                            padding: EdgeInsets.only(
+                            padding: const EdgeInsets.only(
                                 top: 10.0, left: 10.0, right: 10.0),
                             child: Row(children: [
                               Container(
@@ -183,9 +162,68 @@ class _EventsOneState extends State<EventsOne> {
                                           "assets/images/${iconName}",
                                           fit: BoxFit.cover,
                                         )),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               Text("${eventName}",
-                                  style: TextStyle(
+                                  style: const TextStyle(
+                                      //backgroundColor: Colors.black26,
+                                      letterSpacing: 1.0,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold))
+                            ])),
+                        ListTile(
+                          leading:
+                              const Icon(Icons.fiber_manual_record_outlined),
+                          title: const Text('Next event will be'),
+                          subtitle: Text('$nextEvent'),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              "${timeLeft}",
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                  color: Color.fromARGB(255, 93, 93, 93)),
+                            ),
+                            const SizedBox(width: 15),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                : Card(
+                    color: const Color.fromARGB(235, 234, 179,
+                        28), //Color.fromARGB(237, 241, 241, 241),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        // ignore: prefer_const_constructors
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                top: 10.0, left: 10.0, right: 10.0),
+                            child: Row(children: [
+                              Container(
+                                  color: Colors
+                                      .transparent, // To see the difference between the image's original size and the frame
+                                  height: 24,
+                                  width: 24,
+
+                                  // Uploading the Image from Assets
+                                  child: (iconName == "")
+                                      ? Image.asset(
+                                          "assets/images/budo.png",
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Image.asset(
+                                          "assets/images/${iconName}",
+                                          fit: BoxFit.cover,
+                                        )),
+                              const SizedBox(width: 10),
+                              Text("${eventName}",
+                                  style: const TextStyle(
                                       //backgroundColor: Colors.black26,
                                       letterSpacing: 1.0,
                                       fontSize: 18,
@@ -195,7 +233,7 @@ class _EventsOneState extends State<EventsOne> {
                           leading: ShaderMask(
                               blendMode: BlendMode.srcATop,
                               shaderCallback: (Rect bounds) {
-                                return RadialGradient(
+                                return const RadialGradient(
                                   center: Alignment.center,
                                   radius: 1.0,
                                   colors: [Colors.red, Colors.transparent],
@@ -205,27 +243,27 @@ class _EventsOneState extends State<EventsOne> {
                               child: Container(
                                   width: 24,
                                   height: 24,
-                                  child: Icon(
+                                  child: const Icon(
                                       color: Colors.red,
                                       Icons.fiber_manual_record_sharp))),
-                          title: Text('Next event will be'),
+                          title: const Text('Next event will be'),
                           subtitle: Text('$nextEvent'),
                         ),
-                        Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Text(
-                              "${timeLeft}",
+                              "Running now!",
                               textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 93, 93, 93)),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 255, 39, 24)),
                             ),
-                            SizedBox(width: 15),
+                            const SizedBox(width: 15),
                           ],
                         ),
                       ],
                     ),
-                  )
-               );
+                  ));
   }
 }

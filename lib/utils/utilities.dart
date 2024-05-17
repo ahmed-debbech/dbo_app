@@ -38,6 +38,15 @@ int calculateRestTimeToEventAfterNotif(int serverNextEvent) {
   return minutes;
 }
 
+bool isEventLive(int maxNumberOfPassedMin, int timestamp) {
+  DateTime a = DateTime.fromMillisecondsSinceEpoch(timestamp).toLocal();
+  DateTime b = DateTime.now();
+  Duration difference = b.difference(a);
+  int minutes = difference.inMinutes;
+  if (minutes <= maxNumberOfPassedMin) return true;
+  return false;
+}
+
 bool isEventPassed(int serverNextEvent) {
   if (DateTime.now().toLocal().isAfter(
       DateTime.fromMillisecondsSinceEpoch(serverNextEvent).toLocal())) {
