@@ -11,10 +11,14 @@ import '../utils/utilities.dart';
 import '../global.dart' as globals;
 
 class AllEvents extends StatelessWidget {
-  const AllEvents();
+  AllEvents({super.key});
+
+  BudoService bs = BudoService();
 
   @override
   Widget build(BuildContext context) {
+    bs.getState();
+
     return Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

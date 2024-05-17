@@ -18,6 +18,7 @@ import './global.dart' as globals;
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message");
 }
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -29,14 +30,14 @@ void main() async {
           projectId: firebase_opts.projectId));
 
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-  
-  PermissionStatus status = await Permission.notification.status; 
-  if(!status.isGranted){
+
+  PermissionStatus status = await Permission.notification.status;
+  if (!status.isGranted) {
     //await Permission.notification.request();
     await openAppSettings();
     print("user has not granted notification permissions");
   }
-  if(status.isGranted){
+  if (status.isGranted) {
     print("user has granted notification permissions");
   }
   BackgroundService backs = BackgroundService();
@@ -74,7 +75,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
-  BudoService bs = BudoService();
   BackgroundService backs = BackgroundService();
 
   bool openNotifPanel = false;
@@ -83,7 +83,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    bs.getState();
   }
 
   @override
@@ -102,7 +101,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         break;
       case AppLifecycleState.resumed:
         print("Resumed");
-        bs.getState();
         backs.refreshUser();
         break;
       case AppLifecycleState.detached:
@@ -117,59 +115,67 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-            length: 3,
-            child: Scaffold(
-              
-                appBar: AppBar(
-                  flexibleSpace: Image(
-                    opacity: const AlwaysStoppedAnimation(.4),
-                    image: AssetImage('assets/images/background.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                  backgroundColor: Colors.black,
-                  //backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                  bottom: const TabBar(
-                    tabs: [
-                      Tab(icon: Icon(Icons.event_available, color: Colors.white,)),
-                      Tab(icon: Icon(Icons.emoji_events, color: Colors.white,)),
-                      Tab(icon: Icon(Icons.settings, color: Colors.white,)),
-                    ],
-                  ),
-                  title: Row(
-                      children: [ 
-                                    Container(
-                color: Colors.transparent, // To see the difference between the image's original size and the frame
-                height: 24,
-                width: 24,
+        length: 3,
+        child: Scaffold(
+            appBar: AppBar(
+                flexibleSpace: Image(
+                  opacity: const AlwaysStoppedAnimation(.4),
+                  image: AssetImage('assets/images/background.jpg'),
+                  fit: BoxFit.cover,
+                ),
+                backgroundColor: Colors.black,
+                //backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                bottom: const TabBar(
+                  tabs: [
+                    Tab(
+                        icon: Icon(
+                      Icons.event_available,
+                      color: Colors.white,
+                    )),
+                    Tab(
+                        icon: Icon(
+                      Icons.emoji_events,
+                      color: Colors.white,
+                    )),
+                    Tab(
+                        icon: Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                    )),
+                  ],
+                ),
+                title: Row(children: [
+                  Container(
+                      color: Colors
+                          .transparent, // To see the difference between the image's original size and the frame
+                      height: 24,
+                      width: 24,
 
-                // Uploading the Image from Assets
-                child: Image.asset(
-                          "assets/images/icon1.png",
-                          fit: BoxFit.cover,
-                        )),
-                        SizedBox(width: 10),
-                        const Text(
+                      // Uploading the Image from Assets
+                      child: Image.asset(
+                        "assets/images/icon1.png",
+                        fit: BoxFit.cover,
+                      )),
+                  SizedBox(width: 10),
+                  const Text(
                     'DBOG Event Notifier',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 255, 255, 255)),
                   ),
-                        ]
-                )),
-                body: Container(
-            decoration: BoxDecoration(
-        image: DecorationImage(
-          opacity:  0.1,
-          image: AssetImage('assets/images/back_app.jpg',), // Replace with your image path
-          fit: BoxFit.cover,
-        ),
-      ), child:  const TabBarView(
-                  
-                  children: [
-                    AllEvents(), 
-                    Boss(), 
-                    SettingsTab()
-                    ],
+                ])),
+            body: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    opacity: 0.1,
+                    image: AssetImage(
+                      'assets/images/back_app.jpg',
+                    ), // Replace with your image path
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: TabBarView(
+                  children: [AllEvents(), Boss(), SettingsTab()],
                 ))));
   }
 }
