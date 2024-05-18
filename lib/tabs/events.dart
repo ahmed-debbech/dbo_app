@@ -10,10 +10,58 @@ import 'package:flutter/material.dart';
 import '../utils/utilities.dart';
 import '../global.dart' as globals;
 
-class AllEvents extends StatelessWidget {
+class AllEvents extends StatefulWidget {
   AllEvents({super.key});
 
+  @override
+  State<AllEvents> createState() => _AllEventsState();
+}
+
+class Sortable{
+  String name="";
+  int time=0;
+  bool isLive;
+  Sortable({required this.name, required this.time, required this.isLive});
+
+}
+
+class _AllEventsState extends State<AllEvents> {
   BudoService bs = BudoService();
+
+  late Timer _timer;
+  List<Sortable> names = [];
+
+  @override
+  void dispose(){
+    super.dispose();
+    _timer.cancel();
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if(globals.appState != null){
+        setState(() {
+          names.add(Sortable(name: "adult_party_budokai", time: int.parse(globals.appState!.adult_party_budokai??""),
+          isLive: isEventLiveS(30, globals.appState!.past_adult_party_budokai??"")));
+          names.add(Sortable(name: "adult_solo_budokai", time: int.parse(globals.appState!.adult_solo_budokai??""),
+          isLive: isEventLiveS(30, globals.appState!.past_adult_solo_budokai??"")));
+          names.add(Sortable(name: "kid_party_budokai", time: int.parse(globals.appState!.kid_party_budokai??""),
+          isLive: isEventLiveS(30, globals.appState!.past_kid_party_budokai??"")));
+          names.add(Sortable(name: "kid_solo_budokai", time: int.parse(globals.appState!.kid_solo_budokai??""),
+          isLive: isEventLiveS(30, globals.appState!.past_kid_solo_budokai??"")));
+          names.add(Sortable(name: "dojo_war", time: int.parse(globals.appState!.dojo_war??""),
+          isLive: isEventLiveS(30, globals.appState!.past_dojo_war??"")));
+          names.add(Sortable(name: "db_scramble", time: int.parse(globals.appState!.db_scramble??""),
+          isLive: isEventLiveS(30, globals.appState!.past_db_scramble??"")));
+          names.sort((a,b) => a.time - b.time);
+          names= shiftToHead(names);
+          _timer.cancel();
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +75,9 @@ class AllEvents extends StatelessWidget {
               child: Material(
                   child: ListView(children: [
             EventWeek(),
-            EventsOne(title: "adult_solo_budokai"),
-            EventsOne(title: "adult_party_budokai"),
-            EventsOne(title: "kid_solo_budokai"),
-            EventsOne(title: "kid_party_budokai"),
-            EventsOne(title: "dojo_war"),
-            EventsOne(title: "db_scramble"),
+            for(int i=0; i<=names.length-1; i++)
+              EventsOne(title: names[i].name)
+            
           ])))
         ]));
   }

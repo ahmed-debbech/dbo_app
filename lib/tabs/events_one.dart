@@ -16,15 +16,12 @@ class EventsOne extends StatefulWidget {
 
 class _EventsOneState extends State<EventsOne> {
   String timeLeft = "";
-  bool isTimeLeftShown = true;
   late Timer _clockTimer;
   String nextEvent = "";
-  String nextNotif = "";
-  bool notifIsFired = false;
   int time = 0;
   bool isLive = false;
   String iconName = "";
-  String? eventName = null;
+  String? eventName = "loading...";
   int timestamp = 0;
   int last = 0;
 
@@ -47,7 +44,7 @@ class _EventsOneState extends State<EventsOne> {
     _clockTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         if (globals.appState == null) {
-          eventName = null;
+          eventName = "loading...";
           timestamp = 0;
           last = 0;
         } else {
@@ -126,7 +123,7 @@ class _EventsOneState extends State<EventsOne> {
   @override
   Widget build(BuildContext context) {
     return (globals.appState == null)
-        ? Center(
+        ? const Center(
             heightFactor: 12,
             child: CircularProgressIndicator(),
           )
@@ -134,7 +131,7 @@ class _EventsOneState extends State<EventsOne> {
             onDoubleTap: () => {},
             child: isLive == false
                 ? Card(
-                    color: Color.fromARGB(237, 241, 241, 241),
+                    color: const Color.fromARGB(237, 241, 241, 241),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
@@ -255,11 +252,11 @@ class _EventsOneState extends State<EventsOne> {
                             Text(
                               "Running now!",
                               textAlign: TextAlign.left,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Color.fromARGB(255, 255, 39, 24)),
                             ),
-                            const SizedBox(width: 15),
+                            SizedBox(width: 15),
                           ],
                         ),
                       ],
