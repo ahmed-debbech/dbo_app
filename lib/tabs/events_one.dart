@@ -93,7 +93,7 @@ class _EventsOneState extends State<EventsOne> {
               break;
             case "db_scramble":
               iconName = "scrum.png";
-              eventName = "DB Scrumble";
+              eventName = "DB Scramble";
               timestamp = int.parse(globals.appState!.db_scramble);
               last = int.parse(globals.appState?.past_db_scramble == null
                   ? "0"
