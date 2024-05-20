@@ -81,7 +81,6 @@ class _EventsOneState extends State<EventsOne> {
               last = int.parse(globals.appState?.past_kid_party_budokai == null
                   ? "0"
                   : globals.appState?.past_kid_party_budokai ?? "");
-
               break;
             case "dojo_war":
               iconName = "dojo.png";

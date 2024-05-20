@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:dbo_app/dto/NotifConfig.dart';
 import 'package:dbo_app/tabs/events.dart';
 import 'package:intl/intl.dart';
 
@@ -47,15 +48,18 @@ bool isEventLive(int maxNumberOfPassedMin, int timestamp) {
   if (minutes <= maxNumberOfPassedMin) return true;
   return false;
 }
+
 bool isEventLiveS(int maxNumberOfPassedMin, String timestamp) {
-  if(timestamp == "") return false;
-  DateTime a = DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp)).toLocal();
+  if (timestamp == "") return false;
+  DateTime a =
+      DateTime.fromMillisecondsSinceEpoch(int.parse(timestamp)).toLocal();
   DateTime b = DateTime.now();
   Duration difference = b.difference(a);
   int minutes = difference.inMinutes;
   if (minutes <= maxNumberOfPassedMin) return true;
   return false;
 }
+
 bool isEventPassed(int serverNextEvent) {
   if (DateTime.now().toLocal().isAfter(
       DateTime.fromMillisecondsSinceEpoch(serverNextEvent).toLocal())) {
@@ -80,16 +84,42 @@ int fromISO8601ToTimestamp(String iso) {
   return unixTimestamp;
 }
 
-List<Sortable> shiftToHead(List<Sortable> names){
+List<Sortable> shiftToHead(List<Sortable> names) {
   List<Sortable> l = [];
   List<Sortable> k = [];
-  for(int i=0; i<=names.length-1; i++){
-    if(names[i].isLive){
+  for (int i = 0; i <= names.length - 1; i++) {
+    if (names[i].isLive) {
       print("live" + names[i].name);
       l.add(names[i]);
-    }else{
+    } else {
       k.add(names[i]);
     }
   }
   return l + k;
+}
+
+List<Sortable> removeUnecessary(List<Sortable> names, NotifConfig? nc) {
+  List<Sortable> k = [];
+  if (nc == null) return names;
+
+  (!nc.adult_party)
+      ? names.removeWhere((element) => element.name == "adult_party_budokai")
+      : print("nothing to delete");
+  (!nc.adult_solo)
+      ? names.removeWhere((element) => element.name == "adult_solo_budokai")
+      : print("nothing to delete");
+  (!nc.db_scramble)
+      ? names.removeWhere((element) => element.name == "db_scramble")
+      : print("nothing to delete");
+  (!nc.dojo_war)
+      ? names.removeWhere((element) => element.name == "dojo_war")
+      : print("nothing to delete");
+  (!nc.kid_party)
+      ? names.removeWhere((element) => element.name == "kid_party_budokai")
+      : print("nothing to delete");
+  (!nc.kid_solo)
+      ? names.removeWhere((element) => element.name == "kid_solo_budokai")
+      : print("nothing to delete");
+
+  return names;
 }
