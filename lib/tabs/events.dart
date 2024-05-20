@@ -48,7 +48,6 @@ class _AllEventsState extends State<AllEvents> {
           nc = value,
           _timer = Timer.periodic(Duration(seconds: 1), (timer) {
             if (globals.appState != null) {
-              globals.appState!.past_kid_party_budokai = "1716214520000";
               setState(() {
                 names.add(Sortable(
                     name: "adult_party_budokai",
